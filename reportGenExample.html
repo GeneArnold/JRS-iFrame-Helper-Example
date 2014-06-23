@@ -1,0 +1,197 @@
+<html>
+
+	<head>
+
+		<title>JasperReport Server HTML API Helper Example</title>
+
+		<style>
+			body { background-color:grey; }
+			label {	
+					font-family: sans-serif;
+					font-size: 12;
+					background-color: white;
+					padding: 3;
+					border-radius: 5;
+					border: black;
+					border-style: solid;
+					border-width: thin; }
+		</style>
+
+		<script src="jrs_iframe_helper.js"></script>
+
+		<script type="text/javascript">
+			//document.domain="192.168.1.110:8080";			
+			var h = "";
+			var p = "";
+			var a = "";
+
+			function updateSettings(){
+				h = document.getElementById("txtHost").value;
+				p = document.getElementById("txtPort").value;
+				a = document.getElementById("txtAppPath").value;
+			}
+			
+			function runReport(){
+				updateSettings();
+				var e = document.getElementById("reportOutputType");
+				var m = e.options[e.selectedIndex].value;
+				var v = document.querySelector('input[name="viewAsDashboard"]:checked').value;
+				var path = document.getElementById("txtReportPath").value;
+
+				var report = {
+					host:h,
+					port:p,
+					appPath:a,
+					_flowId:"viewReportFlow",
+					//reportUnit:"/public/Examples/HTML_APILink_Example",
+					reportUnit:path,
+					viewAsDashboardFrame:v,
+					decorate:"no",
+					j_username:"jasperadmin|organization_1",
+					j_password:"jasperadmin",
+					parameterList:{sales_fact_ALL__store_sales_2013_1:"20"},
+					htmlContainer:"report",
+					output:m
+				};
+
+				loadReport(report);
+			}
+
+			function runRepo(){
+				updateSettings();
+				var e = document.getElementById("searchType");
+				var m = e.options[e.selectedIndex].value;
+
+				var report = {
+					host:h,
+					port:p,
+					appPath:a,
+					_flowId:"searchFlow",
+					mode:m,
+					viewAsDashboardFrame:"false",
+					decorate:"no",
+					j_username:"jasperadmin|organization_1",
+					j_password:"jasperadmin",
+					htmlContainer:"report"
+				};
+
+				loadReport(report);
+			}
+
+			function runAdhoc(){
+				updateSettings();
+				var m = document.querySelector('input[name="reportMode"]:checked').value;
+				var report = {
+					host:h,
+					port:p,
+					appPath:a,
+					_flowId:"adhocFlow",
+					decorate:"no",
+					viewReport:m,
+					resource:"/public/Samples/Ad_Hoc_Views/01__Geographic_Results_by_Segment",
+					j_username:"jasperadmin|organization_1",
+					j_password:"jasperadmin",
+					htmlContainer:"report"
+				};
+				
+				var r = loadReport(report);
+			}
+
+			function runDashboard(){
+				updateSettings();
+				var report = {
+					host:h,
+					port:p,
+					appPath:a,
+					_flowId:"dashboardRuntimeFlow",
+					viewAsDashboardFrame:"true",
+					decorate:"no",
+					dashboardResource:"/public/Samples/Dashboards/Supermart_Dashboard",
+					hidden_parameterList:{hidden_startMonth:"2",hidden_endMonth:"10"},
+					j_username:"jasperadmin|organization_1",
+					j_password:"jasperadmin",
+					htmlContainer:"report"
+				};
+
+				var r = loadReport(report);
+			}
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<div>
+			<label for="txtHost">Host</label>
+			<input id="txtHost" type="text" name="txtHost" value="http://localhost">
+		</div>
+
+		<div>
+			<label for="txtPort">Port</label>
+			<input id="txtPort" type="text" name="txtPort" value="8080">
+		</div>
+
+		<div>
+			<label for="txtAppPath">App Path</label>
+			<input id="txtAppPath" type="text" name="txtAppPath" value="jasperserver-pro">
+		</div>
+
+		<div>
+			<label for="txtReportPath">Report Path</label>
+			<input id="txtReportPath" type="text" name="txtAppPath" value="/public/Samples/Reports/01._Geographic_Results_by_Segment_Report" size="75">
+		</div>
+
+		<div>
+			<select id="reportOutputType">
+				<option value="html">Output - HTML</option>
+				<option value="pdf">Output - PDF</option>
+				<option value="csv">Output - CSV</option>
+			</select>
+			<input type="radio" id="rd3" name="viewAsDashboard" value="true"><label for="rd3">View As Dashboard True</label>
+			<input type="radio" id="rd4" name="viewAsDashboard" value="false" checked><label for="rd4">View As Dashboard False</label>
+			<button onclick="runReport()">Run Report</button>
+		</div>
+
+		<div>
+			<select id="searchType">
+				<option value="">Search - Repository</option>
+				<option value="library">Search - Library</option>
+				<option value="search">Search - Main</option>
+			</select>
+
+			<button onclick="runRepo()">Run Search</button>
+		</div>
+
+		<div>
+			<input type="radio" id="rd1" name="reportMode" value="true"><label for="rd1">Report Mode True</label>
+			<input type="radio" id="rd2" name="reportMode" value="false" checked><label for="rd2">Report Mode False</label>
+			<button onclick="runAdhoc()">Run Adhoc</button>
+		</div>
+
+		<div>
+			<button onclick="runDashboard()">Run Dashboard</button>
+		</div>
+
+		<div>
+			<iframe id="report" width=1000 height=600 src="" seamless scrolling="no" style="border:solid; border-color:grey"></iframe>
+		</div>
+
+		<div>
+			<iframe id="report2" width=1000 height=600 src="" seamless scrolling="no" style="border:solid; border-color:grey"></iframe>
+		</div>
+
+	</body>
+
+</html>
+
+
+
+
+
+
+    
+
+
+
+
